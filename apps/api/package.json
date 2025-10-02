@@ -2,10 +2,13 @@
   "name": "@saas/api",
   "version": "1.0.0",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/http/server.ts"
   },
   "dependencies": {
- "@saas/auth": "file:../../../packages/auth"
+    "@fastify/cors": "^11.1.0",
+    "@saas/auth": "file:../../../packages/auth",
+    "fastify-type-provider-zod": "^6.0.0",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@saas/eslint-config": "file:../../config/eslint-config",
