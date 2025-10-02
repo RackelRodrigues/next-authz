@@ -15,6 +15,7 @@
     "@saas/prettier": "file:../../config/prettier",
     "@saas/ts-config": "file:../../config/typescript-config",
     "@types/node": "^24.6.1",
+    "prisma": "^6.16.3",
     "tsx": "^4.20.6"
   },
   "prettier": "@saas/prettier",
