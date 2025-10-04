@@ -1,15 +1,19 @@
 //test funcionalities with database
-
 import {faker} from '@faker-js/faker'
 import { hash } from 'bcryptjs';
-import { PrismaClient } from "@prisma/client";
+import {PrismaClient} from '@prisma/client'
+
 const prisma = new PrismaClient()
 
 async function seed(){
 
+    await prisma.member.deleteMany()
+    await prisma.project.deleteMany()
     await prisma.organization.deleteMany()
     await prisma.user.deleteMany()
-    const passwordHash = await hash('loveyou', 1)
+
+
+   const passwordHash = await hash('loveyou', 1)
 
    const user = await prisma.user.create({
     data: {
@@ -17,8 +21,8 @@ async function seed(){
     email: 'rockerlala@gmea.com',
     passwordHash,
     avatarUrl: 'https://github.com/rackelrodrigues.png'
-  }
-})
+     }
+ })
 
 const anotherUser = await prisma.user.create({
   data: {
@@ -44,11 +48,11 @@ const anotherUser1 = await prisma.user.create({
 await prisma.organization.create({
   data: {
     name: 'Acme Inc(Admin)',
-    domain: "acme.com",
+    domain: `meusite${faker.number.int()}.com`,
     ownerId: user.id,
     slug: 'acme-ADMIN',    
-    avatarUrl: 'https://i.pravatar.cc/150?u=acme.com',
-    shouldAttachToDomain: true,
+    avatarUrl: 'https://i.pravatar.cc/150?acme.com',
+    shouldAttachUsersByDomain: true,
     projects:{
      createMany:{
         data: [
@@ -93,7 +97,7 @@ await prisma.organization.create({
 await prisma.organization.create({
   data: {
     name: 'Acme Inc(Member)',
-    domain: "acme.com",
+    domain: `meusite${faker.number.int()}.com`,
     slug: 'acme-MEMBER',  
     ownerId: user.id,
     avatarUrl: 'https://i.pravatar.cc/150?u=acme.com',
@@ -141,14 +145,15 @@ await prisma.organization.create({
 await prisma.organization.create({
   data: {
     name: 'Acme Inc(BILLING)',
-    domain: "acme.com",
+    domain: `meusite${faker.number.int()}.com`,
     slug: 'acme-BILLING',  
     ownerId: user.id,
     avatarUrl: 'https://i.pravatar.cc/150?u=acme.com',
     projects:{
      createMany:{
         data: [
-          {name: 'Project 1', 
+          {
+            name: 'Project 1', 
             slug: faker.lorem.slug(5),
             description: faker.lorem.paragraph(),
             avatarUrl: faker.image.avatarGitHub(),
@@ -156,14 +161,16 @@ await prisma.organization.create({
                 user.id, anotherUser.id, anotherUser1.id
             ])
           },
-          {name: 'Project 2',
+          {
+            name: 'Project 2',
             slug: faker.lorem.slug(5),
             description: faker.lorem.paragraph(),
             avatarUrl: faker.image.avatarGitHub(),
             ownerId: faker.helpers.arrayElement([
                 user.id, anotherUser.id, anotherUser1.id
             ])},
-          {name: 'Project 3', 
+          {
+           name: 'Project 3', 
            slug: faker.lorem.slug(5),
            description: faker.lorem.paragraph(),
            avatarUrl: faker.image.avatarGitHub(),
@@ -187,12 +194,7 @@ await prisma.organization.create({
 });
 
 
-
-
-
-
+}
 seed().then(()=>{
     console.log('Database seeded!')
 })
-
-}
