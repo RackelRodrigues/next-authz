@@ -1,6 +1,6 @@
 # Next.js SaaS + RBAC
 
-Este projeto contém todo o boilerplate necessário para configurar um **SaaS multi-tenant** com **Next.js**, incluindo **autenticação** e **autorização RBAC**.
+This project contains all the necessary boilerplate to set up a multi-tenant SaaS with Next.js including authentication and RBAC authorization.
 
 ---
 
@@ -8,56 +8,56 @@ Este projeto contém todo o boilerplate necessário para configurar um **SaaS mu
 
 ### 🔐 Authentication
 
-- [ ] Autenticar usando **e-mail & senha**
-- [ ] Autenticar usando **Github account**
-- [ ] Recuperar senha via **e-mail**
-- [ ] Criar conta (**e-mail, nome e senha**)
+- [ ] It should be able to authenticate using email & password
+- [ ] It should be able to authenticate using Github account
+- [ ] It should be able to recover password using email
+- [ ] It should be able to create an account (email, name, and password)
 
 ### 🏢 Organizations
 
-- [ ] Criar nova organização
-- [ ] Listar organizações às quais o usuário pertence
-- [ ] Atualizar organização
-- [ ] Encerrar organização
-- [ ] Transferir propriedade da organização
+- [ ] It should be able to create a new organization
+- [ ] It should be able to list organizations to which the user belongs
+- [ ] It should be able to update an organization
+- [ ] It should be able to shut down an organization
+- [ ] It should be able to transfer organization ownership
 
 ### ✉️ Invites
 
-- [ ] Convidar novo membro (**e-mail, role**)
-- [ ] Aceitar convite
-- [ ] Revogar convite pendente
+- [ ] It should be able to invite a new member (email, role)
+- [ ] It should be able to accept an invite
+- [ ] It should be able to revoke a pending invite
 
 ### 👥 Members
 
-- [ ] Listar membros da organização
-- [ ] Atualizar papel de um membro
-- [ ] Deletar membro
+- [ ] It should be able to list organization members
+- [ ] It should be able to update a member role
+- [ ] It should be able to delete a member
 
 ### 📂 Projects
 
-- [ ] Listar projetos dentro de uma organização
-- [ ] Criar novo projeto (**nome, url, descrição**)
-- [ ] Atualizar projeto
-- [ ] Deletar projeto
+- [ ] It should be able to list projects within an organization
+- [ ] It should be able to create a new project (name, url, description)
+- [ ] It should be able to update a project
+- [ ] It should be able to delete a project
 
 ### 💳 Billing
 
-- [ ] Obter detalhes de billing da organização
-- [ ] Custos: **$20 por projeto / $10 por membro (exceto billing role)**
+- [ ] It should be able to get billing details of the organization
+- [ ] Costs: $20 per project / $10 per member (except billing role)
 
 ### 🔑 RBAC (Roles & Permissions)
 
-- [ ] **Owner** (conta como administrador)
-- [ ] **Administrator**
-- [ ] **Member**
-- [ ] **Billing** (um por organização)
-- [ ] **Anonymous**
+- [ ] Owner (counts as administrator)
+- [ ] Administrator
+- [ ] Member
+- [ ] Billing (one per organization)
+- [ ] Anonymous
 
 ---
 
 ## 📊 Permissions Table
 
-| Permissão              | Administrator | Member | Billing | Anonymous |
+| Permission             | Administrator | Member | Billing | Anonymous |
 | ---------------------- | ------------- | ------ | ------- | --------- |
 | Update organization    | ✅            | ❌     | ❌      | ❌        |
 | Delete organization    | ✅            | ❌     | ❌      | ❌        |
@@ -74,25 +74,25 @@ Este projeto contém todo o boilerplate necessário para configurar um **SaaS mu
 | Get billing details    | ✅            | ❌     | ✅      | ❌        |
 | Export billing details | ✅            | ❌     | ✅      | ❌        |
 
-✅ = permitido  
-❌ = não permitido  
-⚠️ = permitido com condições
+✅ = allowed  
+❌ = not allowed  
+⚠️ = allowed with conditions
 
 ---
 
 ## ⚖️ Conditions
 
-- Apenas **owners** podem transferir propriedade da organização;
-- Apenas **administradores** e **autores do projeto** podem atualizar/deletar um projeto;
-- **Membros** podem sair da própria organização.
+- Only owners can transfer organization ownership
+- Only administrators and project creators can update/delete a project
+- Members can leave their own organization
 
 ---
 
 ## 🔌 API & RBAC
 
-- Integração com **OAuth Github**
-- Aplicação registrada no **Github**
-- Fluxo de **autorização via Github**
+- Integration with Github OAuth
+- Application registered on Github
+- Github authorization flow
 
 ---
 
@@ -100,7 +100,7 @@ Este projeto contém todo o boilerplate necessário para configurar um **SaaS mu
 
 ### 🌊 Digital Ocean (Kubernetes)
 
-Baixe o arquivo de configuração do cluster e defina a variável de ambiente:
+Download the cluster configuration file and set the environment variable:
 
 ```bash
 export KUBECONFIG=$HOME/.kube/k8s-config.yaml
