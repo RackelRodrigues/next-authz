@@ -1,9 +1,9 @@
 {
-  "name": "@saas/auth",
+  "name": "@saas/env",
   "version": "0.0.0",
   "private": true,
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "index.ts",
+  "types": "index.ts",
   "devDependencies": {
     "@saas/eslint-config": "file:../../config/eslint-config",
     "@saas/prettier": "file:../../config/prettier",
@@ -15,8 +15,8 @@
     ]
   },
   "prettier": "@saas/prettier",
+  "@t3-oss/env-nextjs": "^0.13.8",
   "dependencies": {
-    "@casl/ability": "^6.7.3",
     "@t3-oss/env-nextjs": "^0.13.8",
     "zod": "^4.1.11"
   }

@@ -9,7 +9,7 @@ export async function authenticateWithPassword(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/sessions/password', {
         schema: {
             tags: ['auth'],
-            summary: "",
+            summary: "Authenticate with password",
             body: z.object({
                 email: z.string().email(),
                 password: z.string(),  

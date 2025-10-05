@@ -2,7 +2,10 @@
   "name": "@saas/api",
   "version": "1.0.0",
   "scripts": {
-    "dev": "tsx watch src/http/server.ts"
+  "dev": "tsx watch src/http/server.ts",
+  "dev:scripts": "npm run env:load && npx prisma migrate dev",
+  "db:studio": "npm run env:load && npx prisma studio",
+  "env:load": "dotenv -e ../../.env"
   },
   "dependencies": {
     "@faker-js/faker": "^10.0.0",

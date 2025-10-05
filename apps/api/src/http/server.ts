@@ -15,6 +15,7 @@ import { getProfile } from './routes/auth/get-profile';
 import { errorHandler } from './erro-handler';
 import { requestPasswordRecover } from './routes/auth/resquest-passwordrecover';
 import { resetPassword } from './routes/auth/reset-password';
+import { authenticateWithGithub } from './routes/auth/authenticate-with-GitHub';
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -28,6 +29,15 @@ app.register(fastifySwagger, {
       title: 'Nextjs SaaS',
       description: 'Full-stack SaaS app with multi-tenant & RBAC',
       version: '1.0.0',
+    },
+    components:{
+      securitySchemes:{
+        bearerAuth:{
+          type: 'http',
+          scheme:'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
     },
     servers: [],
   },
@@ -50,6 +60,7 @@ app.register(authenticateWithPassword)
 app.register(getProfile)
 app.register(requestPasswordRecover)
 app.register(resetPassword)
+app.register(authenticateWithGithub)
 
 
 
