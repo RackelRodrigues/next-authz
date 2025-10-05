@@ -1,9 +1,9 @@
 import { prisma } from "@/http/lib/prisma";
-import { FastifyCorsOptions } from "@fastify/cors"
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import z from "zod";
 import {hash} from 'bcryptjs'
+import { BadRequestError } from "../_errors/bad-request-error";
 
 export async function CreaateAccount(app: FastifyInstance){
  app.withTypeProvider<ZodTypeProvider>().post('/users', {
@@ -22,8 +22,17 @@ export async function CreaateAccount(app: FastifyInstance){
     })
 
     if(userWithSameEmail){
-      return reply.status(400).send({message: 'E-mail already registered.'})
+       throw new BadRequestError('E-mail already registered.')
+                     
     }
+
+    const [, domain] = email.split('@')
+
+    const autoJoinOrganization =  await prisma.organization.findFirst({
+      where:
+      domain,
+      shouldAttackUsersByDomain: true,
+    })
 
     const passwordHash = await hash(password, 6)
     
@@ -31,9 +40,14 @@ export async function CreaateAccount(app: FastifyInstance){
       data: {
         name,
         email,
-        password: passwordHash
+        password: passwordHash,
+        member_on: autoJoinOrganization?{
+          create:{
+            organizationId: autoJoinOrganization.id
+       },
+    } : undefined
       }
-    })
+  })
 
 
     return reply.status(201).send()

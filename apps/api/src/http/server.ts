@@ -1,5 +1,6 @@
 import{ fastify} from 'fastify';
 import fastifyCors from '@fastify/cors';
+import fastifyJwt from '@fastify/jwt';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-UI';
 import {
@@ -9,11 +10,17 @@ import {
     ZodTypeProvider
 } from 'fastify-type-provider-zod'
 import { CreaateAccount } from './routes/auth/create-account';
+import { authenticateWithPassword } from './routes/auth/authenticate-with-password';
+import { getProfile } from './routes/auth/get-profile';
+import { errorHandler } from './erro-handler';
+import { requestPasswordRecover } from './routes/auth/resquest-passwordrecover';
+import { resetPassword } from './routes/auth/reset-password';
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
+app.setErrorHandler(errorHandler)
 
 app.register(fastifySwagger, {
   openapi: {
@@ -34,7 +41,15 @@ app.register(fastifySwaggerUI,{
 
 app.register(fastifyCors);
 
+app.register(fastifyJwt, {
+  secret: 'my-jwt-secret',
+})
+
 app.register(CreaateAccount)
+app.register(authenticateWithPassword)
+app.register(getProfile)
+app.register(requestPasswordRecover)
+app.register(resetPassword)
 
 
 
