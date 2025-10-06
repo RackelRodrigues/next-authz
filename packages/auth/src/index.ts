@@ -10,6 +10,11 @@ import z from 'zod';
 import { billingSubject } from './subjects/billing';
 
 
+export * from './models/organization'
+export * from './models/project'
+export * from './models/user'
+export * from './roles'
+
 const appAbilitiesSchema = z.union([
   userSubject,
   projectSubject,
@@ -40,6 +45,8 @@ export function defineAbilityFor(user: User) {
         return subject.__typename
       },
 });
+  ability.can = ability.can.bind(ability)
+  ability.cannot = ability.cannot.bind(ability)
 
     return ability;
 };

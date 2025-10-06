@@ -16,6 +16,12 @@ import { errorHandler } from './erro-handler';
 import { requestPasswordRecover } from './routes/auth/resquest-passwordrecover';
 import { resetPassword } from './routes/auth/reset-password';
 import { authenticateWithGithub } from './routes/auth/authenticate-with-GitHub';
+import { createOrganization } from './routes/orgs/create-organization';
+import { getOrganization } from './routes/orgs/get-organization';
+import { getOrganizations } from './routes/orgs/get-organizations';
+import { getMembership } from './routes/orgs/get-membership';
+import { updateOrganization } from './routes/orgs/update-organization';
+import { shutdownOrganization } from './routes/orgs/shutdown-organization';
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -60,8 +66,14 @@ app.register(authenticateWithPassword)
 app.register(getProfile)
 app.register(requestPasswordRecover)
 app.register(resetPassword)
-app.register(authenticateWithGithub)
 
+app.register(authenticateWithGithub)
+app.register(createOrganization)
+app.register(getOrganization)
+app.register(getOrganizations)
+app.register(getMembership)
+app.register(updateOrganization)
+app.register(shutdownOrganization)
 
 
 app.listen({port: 3333}).then(() => {
