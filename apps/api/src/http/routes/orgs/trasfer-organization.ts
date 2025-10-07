@@ -10,19 +10,17 @@ import { Role } from "@prisma/client";
 import { UnauthorizedError } from "../_errors/unauthorized-error";
 import { getUserPermissions } from "@/utils/get-user-permissions";
 
-export async function updateOrganization(app: FastifyInstance) {
+export async function transferOrganization(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>()
     .register(auth)
-    .put('/organization/:slug', {
+    .post('/organization/:slug', {
       schema: {
         tags: ['organization'],
         summary: 'Update organization details',
         security: [{bearerAuth: []}],
         body: z.object({
-          name: z.string(),
-          domain: z.string(),
-          shouldAttachUsersByDomain: z.boolean().optional(),
-        }),
+            transferToUserId: z.string()
+         }),
         params:{
          slug: z.string()
         },
@@ -43,14 +41,44 @@ export async function updateOrganization(app: FastifyInstance) {
      
       }
 
-    
+      const {transferToUserId} = request.body  
 
-    await prisma.organization.delete({
-      where:{
-        id: organization.id
-      },
-     
+   const transferToMembership = await prisma.member.findUnique({
+    where: {
+    organizationId_userId: {
+      organizationId: organization.id,
+      userId: transferToUserId,
+    },
+  },
 })
+
+if (!transferToMembership) {
+  throw new BadRequestError(
+    'Target user is not a member of this organization.',
+  )
+}
+
+
+await prisma.$transaction([
+  prisma.member.update({
+    where: {
+      organizationId_userId: {
+        organizationId: organization.id,
+        userId: transferToUserId,
+      },
+    },
+    data: {
+      role: 'ADMIN',
+    },
+  }),
+  prisma.organization.update({
+    where: { id: organization.id },
+    data: { ownerId: transferToUserId },
+  }),
+])
+
+return reply.status(204).send()
+
 
     })
 } 

@@ -1,43 +1,56 @@
-import { prisma } from '@/http/lib/prisma'
-import  { FastifyInstance } from 'fastify'
-import { ZodTypeProvider } from 'fastify-type-provider-zod'
-import z from 'zod'
-import { auth } from '@/http/middlewares/auth'
+import { prisma } from "@/http/lib/prisma";
+import { FastifyInstance } from "fastify";
+import { ZodTypeProvider } from "fastify-type-provider-zod";
+import { z } from "zod";
+import { auth } from "@/http/middlewares/auth";
+import { UnauthorizedError } from "../_errors/unauthorized-error";
+import { hash } from "bcryptjs";
 
 export async function resetPassword(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .post('/password/reset', {
+    .post("/password/reset", {
       schema: {
-        tags: ['auth'],
-        summary: 'Get Authenticated user profile',
+        tags: ["auth"],
+        summary: "Get Authenticated user profile",
         body: z.object({
+          code: z.string(),
           email: z.string().email(),
         }),
         response: {
-          201: z.null(),
+          204: z.null(),
         },
       },
-
       handler: async (request, reply) => {
-        const { email } = request.body
+        const { code, password } = request.body;
 
-        const userFromEmail = await prisma.user.findUnique({
-          where: { email },
-        })
+        const tokenFromCode = await prisma.token.findUnique({
+          where: { id: code },
+        });
 
-        if (!userFromEmail) {
-          return reply.status(201).send()
+        if (!tokenFromCode) {
+          throw new UnauthorizedError();
         }
 
-        const { id: code } = await prisma.token.create({
-          data: {
-            type: 'PASSWORD_RECOVER',
-            userId: userFromEmail.id,
-          },
-        })
+        const passwordHash = await hash(password, 6);
 
-        return reply.status(201).send()
+        await prisma.$transaction([
+          prisma.user.update({
+            where: {
+              id: tokenFromCode.userId,
+            },
+            data: {
+              passwordHash,
+            },
+          }),
+          prisma.token.delete({
+            where: {
+              id: code,
+            },
+          }),
+        ]);
+
+        return reply.status(204).send();
       },
-    })
+    });
 }
